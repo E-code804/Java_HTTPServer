@@ -6,6 +6,9 @@ package com.ecode804.httpserver;
 
 import com.ecode804.httpserver.config.Configuration;
 import com.ecode804.httpserver.config.ConfigurationManager;
+import com.ecode804.httpserver.core.ServerListenerThread;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,44 +17,27 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class HttpServer {
+    // Modifying to use the login, can now replace System.out's w/ this. Do same in listener thread class.
+    private final static Logger LOGGER = LoggerFactory.getLogger(HttpServer.class);
+
     public static void main(String[] args) {
-        System.out.println("Server starting...");
+        LOGGER.info("Server starting...");
 
         ConfigurationManager.getInstance().loadConfigurationFile("src/main/resources/http.json");
         Configuration conf = ConfigurationManager.getInstance().getCurrentConfiguration();
+        int port = conf.getPort();
+        String webroot = conf.getWebroot();
 
-        System.out.println("Using port: " + conf.getPort());
-        System.out.println("Using webroot: " + conf.getWebroot());
+        LOGGER.info("Using port: " + port);
+        LOGGER.info("Using webroot: " + webroot);
 
-        // Needs to handle tcp connections from browser.
+        // Create a thread
         try {
-            ServerSocket serverSocket = new ServerSocket(conf.getPort()); // Pass in the port
-            Socket socket = serverSocket.accept(); // Accepts connections that arise, code stops and wait for connection.
-
-            InputStream inputStream = socket.getInputStream();
-            OutputStream outputStream = socket.getOutputStream();
-
-            // TODO we would read
-
-            // TODO we would do the writing
-            // Defining page to browser
-            String html = "<html><head><title>Simple Java HTTP Server</title></head><body><h1>This page was served using my Java HTTP Server!</h1></body></html>";
-            // HTTP Protocol
-            final String CRLF = "\n\r"; // 13, 10
-            String response = "HTTP/1.1 200 OK" + CRLF + // // Status line of response: HTTP_VERSION RESPONSE_CODE RESPONSE_MESSAGE.
-                    "Content-Length: " + html.getBytes().length + CRLF + // Also sender header w/ size of message we're sending, they end w/ CRLF
-                    CRLF + // Done w/ header
-                    html + // send html
-                    CRLF + CRLF;
-            // Write to output stream
-            outputStream.write(response.getBytes());
-
-            inputStream.close();
-            outputStream.close();
-            socket.close();
-            serverSocket.close();
+            ServerListenerThread serverListenerThread = new ServerListenerThread(port, webroot);
+            serverListenerThread.start(); // Working on a different thread.
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            // TODO Handle later
         }
         // Needs to understand http protocol.
     }
