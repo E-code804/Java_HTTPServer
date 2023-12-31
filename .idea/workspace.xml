@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="db11508b-5af4-47a7-908c-861c36a674eb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ecode804/http/HttpMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ecode804/http/HttpMethod.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ecode804/http/HttpParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ecode804/http/HttpParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ecode804/http/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ecode804/http/HttpRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ecode804/http/HttpParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/ecode804/http/HttpParserTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,6 +72,21 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration name="HttpParserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="httpserver" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ecode804.http.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ecode804.http" />
+      <option name="MAIN_CLASS_NAME" value="com.ecode804.http.HttpParserTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="HTTPServer" />
       <method v="2">
@@ -82,6 +100,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.HttpParserTest" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>

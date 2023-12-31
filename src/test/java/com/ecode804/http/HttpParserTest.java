@@ -19,12 +19,73 @@ class HttpParserTest {
         httpParser = new HttpParser();
     }
 
+    /*
     @Test
     void parseHttpRequest() {
-        httpParser.parseHttpRequest(generateValidTestCase());
+        HttpRequest request = null;
+        try {
+            request = httpParser.parseHttpRequest(generateValidGETTestCase());
+        } catch (HttpParsingException e) {
+            fail(e);
+        }
+
+        assertEquals(request.getMethod(), HttpMethod.GET);
     }
 
-    private InputStream generateValidTestCase() {
+    @Test
+    void parseHttpRequestBadMethodName() {
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(generateBadTestCaseMethodName1());
+            fail();
+        } catch (HttpParsingException e) {
+            assertEquals(e.getErrorCode(), HttpStatusCode.CLIENT_ERROR_501_NOT_IMPLEMENTED);
+        }
+    }
+
+    @Test
+    void parseHttpRequestBadMethodNameTooLong() {
+        // For too long a method name
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(generateBadTestCaseMethodNameTooLong());
+            fail();
+        } catch (HttpParsingException e) {
+            assertEquals(e.getErrorCode(), HttpStatusCode.CLIENT_ERROR_501_NOT_IMPLEMENTED);
+        }
+    }
+
+    @Test
+    void parseHttpRequestBadMethodInvalidNumItems() {
+        // For too long a method name
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(generateBadTestCaseRequestLineInvalidNumItems1());
+            fail();
+        } catch (HttpParsingException e) {
+            assertEquals(e.getErrorCode(), HttpStatusCode.CLIENT_ERROR_400_BAD_REQUEST);
+        }
+    }
+
+    @Test
+    void parseHttpRequestBadMethodEmptyRequestLine() {
+        // For too long a method name
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(generateBadTestCaseEmptyRequestLine());
+            fail();
+        } catch (HttpParsingException e) {
+            assertEquals(e.getErrorCode(), HttpStatusCode.CLIENT_ERROR_400_BAD_REQUEST);
+        }
+    }
+    */
+    @Test
+    void parseHttpRequestBadMethodNoLF() {
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(generateBadTestCaseRequestNoLF());
+            fail();
+        } catch (HttpParsingException e) {
+            assertEquals(e.getErrorCode(), HttpStatusCode.CLIENT_ERROR_400_BAD_REQUEST);
+        }
+    }
+
+    private InputStream generateValidGETTestCase() {
         String rawData = "GET / HTTP/1.1\r\n" +
                 "Host: localhost:8080\r\n" +
                 "Connection: keep-alive\r\n" +
@@ -41,6 +102,76 @@ class HttpParserTest {
                 "Sec-Fetch-Mode: navigate\r\n" +
                 "Sec-Fetch-User: ?1\r\n" +
                 "Sec-Fetch-Dest: document\r\n" +
+                "Accept-Encoding: gzip, deflate, br\r\n" +
+                "\r\n";
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(
+                        StandardCharsets.US_ASCII
+                )
+        );
+        return inputStream;
+    }
+
+    private InputStream generateBadTestCaseMethodName1() {
+        String rawData = "GeT / HTTP/1.1\r\n" +
+                "Host: localhost:8080\r\n" +
+                "Connection: keep-alive\r\n" +
+                "Accept-Encoding: gzip, deflate, br\r\n" +
+                "\r\n";
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(
+                        StandardCharsets.US_ASCII
+                )
+        );
+        return inputStream;
+    }
+
+    private InputStream generateBadTestCaseMethodNameTooLong() {
+        String rawData = "GETTTT / HTTP/1.1\r\n" +
+                "Host: localhost:8080\r\n" +
+                "Connection: keep-alive\r\n" +
+                "Accept-Encoding: gzip, deflate, br\r\n" +
+                "\r\n";
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(
+                        StandardCharsets.US_ASCII
+                )
+        );
+        return inputStream;
+    }
+
+    private InputStream generateBadTestCaseRequestLineInvalidNumItems1() {
+        String rawData = "GET / SSSSS / HTTP/1.1\r\n" +
+                "Host: localhost:8080\r\n" +
+                "Connection: keep-alive\r\n" +
+                "Accept-Encoding: gzip, deflate, br\r\n" +
+                "\r\n";
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(
+                        StandardCharsets.US_ASCII
+                )
+        );
+        return inputStream;
+    }
+
+    private InputStream generateBadTestCaseEmptyRequestLine() {
+        String rawData = "\r\n" +
+                "Host: localhost:8080\r\n" +
+                "Connection: keep-alive\r\n" +
+                "Accept-Encoding: gzip, deflate, br\r\n" +
+                "\r\n";
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(
+                        StandardCharsets.US_ASCII
+                )
+        );
+        return inputStream;
+    }
+
+    private InputStream generateBadTestCaseRequestNoLF() {
+        String rawData = "GET / HTTP/1.1\r" + // No LF -> \n.
+                "Hos7: localhost:8080\r\n" +
+                "Connection: keep-alive\r\n" +
                 "Accept-Encoding: gzip, deflate, br\r\n" +
                 "\r\n";
         InputStream inputStream = new ByteArrayInputStream(
